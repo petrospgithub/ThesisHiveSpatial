@@ -1,0 +1,1 @@
+spark-submit --class ThesisServer --master yarn --deploy-mode cluster target/HiveThrift-jar-with-dependencies.jar

@@ -39,9 +39,9 @@ object ThesisServer {
     val result=spark.sql("SELECT * FROM records")
     result.collect().foreach(println)
 
-    spark.sql("ADD JAR "+esri_jar)
-    spark.sql("ADD JAR "+hive_input_jar)
-    spark.sql("ADD JAR "+hive_json_input_jar)
+    spark.sql("ADD JAR "+esri_jar.getPath)
+    spark.sql("ADD JAR "+hive_input_jar.getPath)
+    spark.sql("ADD JAR "+hive_json_input_jar.getPath)
 
     spark.sql("create temporary function ST_AsBinary as 'com.esri.hadoop.hive.ST_AsBinary'")
     spark.sql("create temporary function ST_AsGeoJSON as 'com.esri.hadoop.hive.ST_AsGeoJson'")
