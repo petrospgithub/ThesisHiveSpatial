@@ -137,14 +137,14 @@ object ThesisServer {
     spark.sql("create temporary function ST_Bin as 'com.esri.hadoop.hive.ST_Bin'")
     spark.sql("create temporary function ST_BinEnvelope as 'com.esri.hadoop.hive.ST_BinEnvelope'")
 
-    spark.sql("CREATE TABLE demo_shape_point(shape string) STORED AS ORC")
+    //spark.sql("CREATE TABLE demo_shape_point(shape string) STORED AS ORC")
 
-    spark.sql("INSERT INTO demo_shape_point VALUES ('POINT (-74.140007019999985 39.650001530000054)')")
+    //spark.sql("INSERT INTO demo_shape_point VALUES ('POINT (-74.140007019999985 39.650001530000054)')")
 
-    spark.sql("SELECT * FROM demo_shape_point").collect().foreach(println)
+    //spark.sql("SELECT * FROM demo_shape_point").collect().foreach(println)
 
-    spark.sql("SELECT ST_AsJson(ST_Polygon(1.5,2.5, 3.0,2.2, 2.2,1.1))").collect().foreach(println)
+    //spark.sql("SELECT ST_AsJson(ST_Polygon(1.5,2.5, 3.0,2.2, 2.2,1.1))").collect().foreach(println)
 
-    spark.close()
+    //spark.close()
   }
 }
