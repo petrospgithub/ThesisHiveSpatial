@@ -1,3 +1,6 @@
+import java.net.URL
+
+import org.apache.hadoop.fs.FsUrlStreamHandlerFactory
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.hive.thriftserver.HiveThriftServer2
 
@@ -9,7 +12,7 @@ case class Record(key: Int, value: String)
 
 object ThesisServer {
   def main(args: Array[String]): Unit = {
-
+    URL.setURLStreamHandlerFactory(new FsUrlStreamHandlerFactory())
     val spark = args(0) match {
       case "true" => SparkSession.builder
         .appName("Spark Examples")
@@ -27,9 +30,6 @@ object ThesisServer {
     val hive_input_jar = getClass.getResource("/jars/spatial-sdk-hive-1.2.1-SNAPSHOT.jar")
     val hive_json_input_jar = getClass.getResource("/jars/spatial-sdk-json-1.2.1-SNAPSHOT.jar")
 
-    spark.sparkContext.addFile(esri_jar.getPath)
-    spark.sparkContext.addFile(hive_input_jar.getPath)
-    spark.sparkContext.addFile(hive_json_input_jar.getPath)
     import spark.implicits._
 
     val df = spark.createDataFrame((1 to 100).map(i => Record(i, s"val_$i")))
@@ -37,14 +37,14 @@ object ThesisServer {
     // view is automatically inferred using scala reflection.
     df.createOrReplaceTempView("records")
 
-    val test=HiveThriftServer2.startWithContext(spark.sqlContext)
+    HiveThriftServer2.startWithContext(spark.sqlContext)
 
-    val result=spark.sql("SELECT * FROM records")
-    result.collect().foreach(println)
-
-    spark.sql("ADD JAR esri-geometry-api-1.2.1.jar")
-    spark.sql("ADD JAR spatial-sdk-hive-1.2.1-SNAPSHOT.jar")
-    spark.sql("ADD JAR spatial-sdk-json-1.2.1-SNAPSHOT.jar")
+    //val result=spark.sql("SELECT * FROM records")
+    //result.collect().foreach(println)
+/*
+    spark.sql("ADD JAR "+esri_jar)
+    spark.sql("ADD JAR "+hive_input_jar)
+    spark.sql("ADD JAR "+hive_input_jar)
 
     spark.sql("create temporary function ST_AsBinary as 'com.esri.hadoop.hive.ST_AsBinary'")
     spark.sql("create temporary function ST_AsGeoJSON as 'com.esri.hadoop.hive.ST_AsGeoJson'")
@@ -139,7 +139,7 @@ object ThesisServer {
 
     spark.sql("create temporary function ST_Bin as 'com.esri.hadoop.hive.ST_Bin'")
     spark.sql("create temporary function ST_BinEnvelope as 'com.esri.hadoop.hive.ST_BinEnvelope'")
-
+*/
     //spark.sql("CREATE TABLE demo_shape_point(shape string) STORED AS ORC")
 
     //spark.sql("INSERT INTO demo_shape_point VALUES ('POINT (-74.140007019999985 39.650001530000054)')")
