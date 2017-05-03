@@ -27,6 +27,9 @@ object ThesisServer {
     val hive_input_jar = getClass.getResource("/jars/spatial-sdk-hive-1.2.1-SNAPSHOT.jar")
     val hive_json_input_jar = getClass.getResource("/jars/spatial-sdk-json-1.2.1-SNAPSHOT.jar")
 
+    spark.sparkContext.addFile(esri_jar.getPath)
+    spark.sparkContext.addFile(hive_input_jar.getPath)
+    spark.sparkContext.addFile(hive_json_input_jar.getPath)
     import spark.implicits._
 
     val df = spark.createDataFrame((1 to 100).map(i => Record(i, s"val_$i")))
@@ -39,9 +42,9 @@ object ThesisServer {
     val result=spark.sql("SELECT * FROM records")
     result.collect().foreach(println)
 
-    spark.sql("ADD JAR "+esri_jar.getPath)
-    spark.sql("ADD JAR "+hive_input_jar.getPath)
-    spark.sql("ADD JAR "+hive_json_input_jar.getPath)
+    spark.sql("ADD JAR esri-geometry-api-1.2.1.jar")
+    spark.sql("ADD JAR spatial-sdk-hive-1.2.1-SNAPSHOT.jar")
+    spark.sql("ADD JAR spatial-sdk-json-1.2.1-SNAPSHOT.jar")
 
     spark.sql("create temporary function ST_AsBinary as 'com.esri.hadoop.hive.ST_AsBinary'")
     spark.sql("create temporary function ST_AsGeoJSON as 'com.esri.hadoop.hive.ST_AsGeoJson'")
