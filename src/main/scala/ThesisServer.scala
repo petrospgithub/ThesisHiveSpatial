@@ -26,6 +26,8 @@ object ThesisServer {
         .getOrCreate()
     }
 
+    //TODO http://stackoverflow.com/questions/31341498/save-spark-dataframe-as-dynamic-partitioned-table-in-hive
+
     val esri_jar = getClass.getResource("/jars/esri-geometry-api-1.2.1.jar")
     val hive_input_jar = getClass.getResource("/jars/spatial-sdk-hive-1.2.1-SNAPSHOT.jar")
     val hive_json_input_jar = getClass.getResource("/jars/spatial-sdk-json-1.2.1-SNAPSHOT.jar")
@@ -36,6 +38,9 @@ object ThesisServer {
     // Any RDD containing case classes can be used to create a temporary view.  The schema of the
     // view is automatically inferred using scala reflection.
     df.createOrReplaceTempView("records")
+
+    df.write.mode("overwrite").saveAsTable("records")
+    //df.write.partitionBy()//TODO new partitioner
 
     HiveThriftServer2.startWithContext(spark.sqlContext)
 
